@@ -1,0 +1,12 @@
+
+
+Rough Code
+
+ const handleEnterProduct = useCallback((enterProduct: string) => {
+    setEnterProduct(enterProduct);
+    if (productSelectionType === "collections") {
+      const formData = new FormData();
+      formData.append("searchTerm", enterProduct);
+      fetcher.submit(formData, { method: "post" });
+    }
+  }, [fetcher, productSelectionType]);

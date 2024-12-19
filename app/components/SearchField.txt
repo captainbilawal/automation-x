@@ -1,0 +1,60 @@
+import { useState, useCallback } from "react";
+import { TextField, Modal } from "@shopify/polaris";
+
+interface Item {
+  id: number;
+  name: string;
+}
+
+interface SearchFieldProps {
+  items: Item[];
+}
+
+export default function SearchField({ items }: SearchFieldProps) {
+  const [searchValue, setSearchValue] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+    setIsModalOpen(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  const filteredItems = searchValue
+    ? items.filter((item) =>
+        item.name.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    : items;
+
+  return (
+    <>
+      <TextField
+        label="Search products"
+        value={searchValue}
+        onChange={handleSearchChange}
+        autoComplete="off"
+      />
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        title="Search Results"
+      >
+        <Modal.Section>
+          {filteredItems.length > 0 ? (
+            <ul>
+              {filteredItems.map((item) => (
+                <li key={item.id}>{item.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No items found</p>
+          )}
+        </Modal.Section>
+      </Modal>
+    </>
+  );
+}
+
